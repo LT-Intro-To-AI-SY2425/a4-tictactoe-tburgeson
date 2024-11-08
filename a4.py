@@ -10,8 +10,50 @@ class TTTBoard:
             represent moves by player 'O' and '*'s are spots no one has yet played on
     """
 
-    pass
+    def __init__(self):
+        self.board = ['*' for _ in range(9)]
 
+    def display_board(self):
+        for i in range(0, 9, 3):
+            print(f"{self.board[i]} | {self.board[i+1]} | {self.board[i+2]}")
+            if i < 6:
+                print("--+---+--")
+        print()
+
+    def make_move(self, player: str, pos: int) -> bool:
+        if 0 <= pos < 9 and self.board[pos] == '*':
+            self.board[pos] = player
+            return True
+        return False
+
+    def __str__(self):
+        rows = []
+        for i in range(0, 9, 3):
+            rows.append(f"{self.board[i]} | {self.board[i+1]} | {self.board[i+2]}")
+            if i < 6:
+                rows.append("--+---+--")
+        return "\n".join(rows)
+
+    def has_won(self, player: str) -> bool:
+        winning_combinations = [
+            (0, 1, 2), (3, 4, 5), (6, 7, 8),  # rows
+            (0, 3, 6), (1, 4, 7), (2, 5, 8),  # columns
+            (0, 4, 8), (2, 4, 6)              # diagonals
+        ]
+        for a, b, c in winning_combinations:
+            if self.board[a] == self.board[b] == self.board[c] == player:
+                return True
+        return False
+
+    def game_over(self) -> bool:
+        if self.has_won('X') or self.has_won('O'):
+            return True
+        if '*' not in self.board:
+            return True
+        return False
+
+    def clear(self):
+        self.board = ['*' for _ in range(9)]
 
 def play_tic_tac_toe() -> None:
     """Uses your class to play TicTacToe"""
@@ -61,6 +103,7 @@ if __name__ == "__main__":
     # need to write some more tests to make sure that your TTTBoard class is behaving
     # properly.
     brd = TTTBoard()
+
     brd.make_move("X", 8)
     brd.make_move("O", 7)
 
@@ -89,4 +132,4 @@ if __name__ == "__main__":
     print("All tests passed!")
 
     # uncomment to play!
-    # play_tic_tac_toe()
+    play_tic_tac_toe()
